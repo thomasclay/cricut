@@ -1,0 +1,47 @@
+<mat-toolbar>
+  <button mat-icon-button class="icon" aria-label="Menu" (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+    <span>Cricut: {{ PageTitle }}</span>
+  </button>
+  <span class="spacer"></span>
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon>share</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="side" opened>
+    <mat-accordion>
+      <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Main Menu</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-action-list>
+          <button mat-list-item routerLink="/">
+            <mat-icon>home</mat-icon>
+            Home</button>
+          <button mat-list-item routerLink="/user">
+            <mat-icon>person</mat-icon>
+            User</button>
+        </mat-action-list>
+      </mat-expansion-panel>
+      <mat-expansion-panel *ngIf="pageMenuItems.length > 0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Content Menu</mat-panel-title>
+        </mat-expansion-panel-header>
+          <mat-action-list *ngFor="let item of pageMenuItems">
+            <button mat-list-item [routerLink]="item.link">
+              <mat-icon *ngIf="item.icon">{{ item.icon }}</mat-icon>
+              {{ item.title }}
+            </button>
+          </mat-action-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet />
+  </mat-sidenav-content>
+</mat-sidenav-container>
