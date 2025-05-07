@@ -36,9 +36,9 @@ export class SpaceFlightNewsService {
     filter = filter || {};
     filter.limit = filter.limit || 5;
     filter.offset = filter.offset || Math.floor(Math.random() * 30000);
-    var params = new HttpParams();
-    params = params.append('limit', filter.limit);
-    params = params.append('offset', filter.offset);
+    var params = (new HttpParams())
+      .append('limit', filter.limit)
+      .append('offset', filter.offset);
     if (filter.hasEvent) {
       params = params = params.append('has_event', filter.hasEvent);
     }
@@ -49,6 +49,9 @@ export class SpaceFlightNewsService {
       params = params = params.append('is_featured', filter.isFeatured);
     }
     console.log(params);
+
+    // TODO: test this to make sure the error handling works correctly.
+    // we simply want to return an observable "empty" array if there is an error.
     return this._httpClient.get<ArticleResponse>(`${this._baseUrl}/articles`, { params })
       .pipe(
           map((response) => {
