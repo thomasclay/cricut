@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable } from 'rxjs';
+import { LoggerService } from '../logger/logger.service';
 
 export interface ArticleFilter {
   hasEvent?: boolean;
@@ -30,7 +31,7 @@ interface ArticleResponse {
 export class SpaceFlightNewsService {
   private readonly _baseUrl = 'https://api.spaceflightnewsapi.net/v4';
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient, private _log: LoggerService) { }
 
   getArticles(filter?: ArticleFilter): Observable<Array<SpaceFLightArticle>> {
     filter = filter || {};
@@ -48,7 +49,7 @@ export class SpaceFlightNewsService {
     if (filter.isFeatured) {
       params = params = params.append('is_featured', filter.isFeatured);
     }
-    console.log(params);
+    this._log.debug('SpaceFlightNewsService.getArticles', filter, params);
 
     // TODO: test this to make sure the error handling works correctly.
     // we simply want to return an observable "empty" array if there is an error.
@@ -58,7 +59,7 @@ export class SpaceFlightNewsService {
             return response.results;
           }), 
           catchError((err) => {
-            console.error('Error fetching articles', err);
+            this._log.error('Error fetching articles', err);
             return new BehaviorSubject<Array<SpaceFLightArticle>>([]).asObservable();
           })
     );
